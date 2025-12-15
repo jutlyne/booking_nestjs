@@ -11,6 +11,7 @@ import * as winston from 'winston';
 import { AppLogger } from './utils/logger';
 import authConfig from './configs/auth.config';
 import { Request } from 'express';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { Request } from 'express';
       ],
     }),
     UsersModule,
+    AuthModule,
   ],
   providers: [AppLogger],
 })
