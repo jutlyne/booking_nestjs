@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+/**
+ * Prisma models mapped to snake_case table/columns.
+ * - Table names via @@map("...").
+ * - Column names via @map("...").
+ */
+
+enum Frequency {
+  daily
+  weekly
+  monthly
+}
+
+model User {
+  id                  Int       @id @default(autoincrement()) @map("id")
+  name                String?   @map("name")
+  email               String    @unique @map("email")
+  password            String    @map("password")
+  fullname            String?   @map("fullname")
+  phone               Int?      @map("phone")
+  avatar              String?   @map("avatar")
+  teamId              Int?      @map("team_id")
+  passwordResetPin    Int?      @map("password_reset_pin")
+  passwordResetSentAt DateTime? @map("password_reset_sent_at")
+
+  team        Team? @relation("team_members", fields: [teamId], references: [id])
+  leadingTeam Team? @relation("team_leader")
+
+  bookings RoomBooking[] @relation("user_bookings")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("users")
+}
+
+model Team {
+  id       Int     @id @default(autoincrement()) @map("id")
+  name     String  @map("name")
+  avatar   String? @map("avatar")
+  leaderId Int?    @unique @map("leader_id")
+
+  bookings RoomBooking[] @relation("team_bookings")
+  members  User[]        @relation("team_members")
+  leader   User?         @relation("team_leader", fields: [leaderId], references: [id])
+
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  deletedAt    DateTime?     @map("deleted_at")
+
+  @@map("teams")
+}
+
+model Location {
+  id      Int     @id @default(autoincrement()) @map("id")
+  name    String  @map("name")
+  address String? @map("address")
+
+  rooms Room[] @relation("location_rooms")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("locations")
+}
+
+model Room {
+  id         Int    @id @default(autoincrement()) @map("id")
+  name       String @map("name")
+  locationId Int    @map("location_id")
+
+  location Location      @relation("location_rooms", fields: [locationId], references: [id])
+  bookings RoomBooking[] @relation("room_bookings")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("rooms")
+}
+
+model RecurringRule {
+  id          Int       @id @default(autoincrement()) @map("id")
+  frequency   Frequency @map("frequency")
+  interval    Int       @default(1) @map("interval")
+  weekdays    String?   @map("weekdays")
+  dayOfMonth  Int?      @map("day_of_month")
+  repeatUntil DateTime? @map("repeat_until")
+
+  bookings RoomBooking[] @relation("recurring_bookings")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("recurring_rules")
+}
+
+model RoomBooking {
+  id              Int      @id @default(autoincrement()) @map("id")
+  roomId          Int      @map("room_id")
+  userId          Int      @map("user_id")
+  teamId          Int?     @map("team_id")
+  startTime       DateTime @map("start_time")
+  endTime         DateTime @map("end_time")
+  isRecurring     Boolean  @default(false) @map("is_recurring")
+  recurringRuleId Int?     @map("recurring_rule_id")
+
+  room          Room           @relation("room_bookings", fields: [roomId], references: [id])
+  user          User           @relation("user_bookings", fields: [userId], references: [id])
+  team          Team?          @relation("team_bookings", fields: [teamId], references: [id])
+  recurringRule RecurringRule? @relation("recurring_bookings", fields: [recurringRuleId], references: [id])
+
+  occurrences RoomBookingOccurrence[] @relation("booking_occurrences")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("room_booking")
+}
+
+model RoomBookingOccurrence {
+  id             Int      @id @default(autoincrement()) @map("id")
+  bookingId      Int      @map("booking_id")
+  occurrenceDate DateTime @map("occurrence_date")
+  startTime      DateTime @map("start_time")
+  endTime        DateTime @map("end_time")
+
+  booking RoomBooking @relation("booking_occurrences", fields: [bookingId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("room_booking_occurrence")
+}
