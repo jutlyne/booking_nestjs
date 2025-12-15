@@ -8,6 +8,8 @@ export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(data: CreateUserDto): Promise<UserEntity> {
+    console.log(data);
+
     const user = await this.prisma.user.create({
       data,
     });
@@ -19,15 +21,15 @@ export class UsersRepository {
       user.fullname ?? undefined,
       user.phone ?? undefined,
       user.avatar ?? undefined,
-      user.team_id ?? undefined,
-      user.created_at,
-      user.updated_at,
+      user.teamId ?? undefined,
+      user.createdAt,
+      user.updatedAt,
     );
   }
 
   async findById(id: number): Promise<UserEntity | null> {
     const user = await this.prisma.user.findFirst({
-      where: { id, deleted_at: null },
+      where: { id, deletedAt: null },
     });
 
     if (!user) return null;
@@ -39,15 +41,15 @@ export class UsersRepository {
       user.fullname ?? undefined,
       user.phone ?? undefined,
       user.avatar ?? undefined,
-      user.team_id ?? undefined,
-      user.created_at,
-      user.updated_at,
+      user.teamId ?? undefined,
+      user.createdAt,
+      user.updatedAt,
     );
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await this.prisma.user.findFirst({
-      where: { email, deleted_at: null },
+      where: { email, deletedAt: null },
     });
 
     if (!user) return null;
@@ -59,9 +61,9 @@ export class UsersRepository {
       user.fullname ?? undefined,
       user.phone ?? undefined,
       user.avatar ?? undefined,
-      user.team_id ?? undefined,
-      user.created_at,
-      user.updated_at,
+      user.teamId ?? undefined,
+      user.createdAt,
+      user.updatedAt,
     );
   }
 }

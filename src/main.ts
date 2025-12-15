@@ -9,6 +9,7 @@ import { AllConfigType } from './configs/config.interface';
 import validationOptions from './utils/validate-option';
 import { AppLogger } from './utils/logger';
 import { Environment } from './configs/app.config';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,8 @@ async function bootstrap() {
     configService.getOrThrow('app.apiPrefix', { infer: true }),
     { exclude: ['/'] },
   );
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe(validationOptions));

@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '../../generated/prisma/client';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class PrismaService extends PrismaClient {
-  constructor() {
-    const adapter = new PrismaMariaDb({
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      user: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-    });
-    super({ adapter });
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  async onModuleInit() {
+    await this.$connect();
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
   }
 }

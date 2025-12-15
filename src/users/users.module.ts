@@ -1,3 +1,4 @@
+import { IsNotExist } from '@/utils/validators/is-not-exists.validator';
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
@@ -17,6 +18,7 @@ import { PrismaService } from 'src/databases/prisma.service';
       useClass: UsersService,
     },
     PrismaService,
+    IsNotExist,
   ],
   exports: [
     {
