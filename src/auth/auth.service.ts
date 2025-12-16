@@ -48,6 +48,7 @@ export class AuthService {
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: user.id,
+      role: user.role,
     });
 
     return {
@@ -73,7 +74,7 @@ export class AuthService {
     };
   }
 
-  private async getTokensData(data: { id: number }) {
+  private async getTokensData(data: { id: number; role: string }) {
     const tokenExpiresIn = this.configService.getOrThrow<string>(
       'auth.expires',
       {
@@ -85,6 +86,7 @@ export class AuthService {
       await this.jwtService.signAsync(
         {
           id: data.id,
+          role: data.role,
         },
         {
           secret: this.configService.getOrThrow<string>('auth.secret', {
