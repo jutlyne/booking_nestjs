@@ -3,13 +3,14 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import appConfig from './configs/app.config';
+import authConfig from './configs/auth.config';
+import databaseConfig from './configs/database.config';
 
 import { ClsModule } from 'nestjs-cls';
 import { randomUUID } from 'crypto';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AppLogger } from './utils/logger';
-import authConfig from './configs/auth.config';
 import { Request } from 'express';
 import { AuthModule } from './auth/auth.module';
 
@@ -17,7 +18,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
-      load: [appConfig, authConfig],
+      load: [appConfig, authConfig, databaseConfig],
       isGlobal: true,
     }),
     ClsModule.forRoot({
