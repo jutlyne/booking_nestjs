@@ -9,10 +9,13 @@ export class UserEntity extends BaseEntity {
   password: string;
 
   role: Role;
-  fullname?: string;
-  phone?: number;
-  avatar?: string;
-  teamId?: number;
+  fullname?: string | null;
+  phone?: number | null;
+  avatar?: string | null;
+  teamId?: number | null;
+
+  passwordResetPin?: number | null;
+  passwordResetSentAt?: Date | null;
 
   constructor(partial: Partial<UserEntity>) {
     super(partial);

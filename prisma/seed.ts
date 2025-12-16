@@ -29,6 +29,50 @@ async function main() {
       role: 'admin',
     },
   });
+
+  const locations = [
+    {
+      name: 'Đà Nẵng',
+      address: '218 Bạch Đằng, Hải Châu, Đà Nẵng',
+      rooms: [
+        {
+          name: 'Phòng họp 1',
+        },
+        {
+          name: 'Phòng họp 2',
+        },
+        {
+          name: 'Phòng họp 3',
+        },
+      ],
+    },
+    {
+      name: 'Huế',
+      address: '28 Lý Thường Kiệt, Thuận Hóa, Huế',
+      rooms: [
+        {
+          name: 'Phòng họp 1',
+        },
+      ],
+    },
+  ];
+
+  for (const location of locations) {
+    await prisma.location.upsert({
+      where: { name: location.name },
+      update: {},
+      create: {
+        name: location.name,
+        address: location.address,
+        rooms: {
+          create: location.rooms.map((room) => ({
+            name: room.name,
+          })),
+        },
+      },
+    });
+  }
+
   console.log({ sAdmin });
 }
 main()

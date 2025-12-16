@@ -97,3 +97,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Prisma CMD
+
+- Add column npx prisma migrate dev --name add_role_to_user_table
+- Run seed npx prisma db seed

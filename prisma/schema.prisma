@@ -68,7 +68,7 @@ model Team {
 
 model Location {
   id      Int     @id @default(autoincrement()) @map("id")
-  name    String  @map("name")
+  name    String  @unique @map("name")
   address String? @map("address")
 
   rooms Room[] @relation("location_rooms")

@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { hashPassword } from '@/common/utils/helpers';
 import { PrismaService } from '@/databases/prisma.service';
+import { GetUsersDto } from './dto/get-users.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -70,6 +71,33 @@ export class UsersRepository {
       teamId: user.teamId ?? undefined,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+    });
+  }
+
+  async findAll(dto: GetUsersDto) {
+    const { teamId, email, name, lastId = 0, limit = 10 } = dto;
+
+    const where: any = {};
+    if (teamId) where.teamId = teamId;
+    if (email) where.email = { contains: email };
+    if (name) where.fullname = { contains: name };
+
+    const total = await this.prisma.user.count({ where });
+
+    where.id = { gt: lastId };
+
+    const users = await this.prisma.user.findMany({
+      where,
+      take: limit,
+      orderBy: { id: 'asc' },
+    });
+
+    return { users: users.map((user) => new UserEntity(user)), total };
+  }
+
+  async deleteUser(id: number) {
+    return this.prisma.user.delete({
+      where: { id },
     });
   }
 }

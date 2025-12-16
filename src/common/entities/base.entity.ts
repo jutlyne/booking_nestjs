@@ -7,7 +7,7 @@ export class BaseEntity {
   updatedAt?: Date;
 
   @Exclude()
-  deletedAt?: Date;
+  deletedAt?: Date | null;
 
   constructor(partial?: Partial<BaseEntity>) {
     if (partial) {
