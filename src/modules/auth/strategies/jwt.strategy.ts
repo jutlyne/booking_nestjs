@@ -2,9 +2,9 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
-import { AllConfigType } from '@/configs/config.interface';
+import { AllConfigType } from '@/common/configs/config.interface';
 import { JwtPayloadInterface } from './interfaces/jwt-payload.interface';
-import { OrNeverType } from '@/utils/interfaces/or-never.type';
+import { OrNeverType } from '@/common/utils/interfaces/or-never.type';
 import { Request } from 'express';
 
 @Injectable()

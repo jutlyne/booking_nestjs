@@ -1,8 +1,8 @@
 import { Exclude } from 'class-transformer';
 import { Role } from '@prisma/client';
+import { BaseEntity } from '@/common/entities/base.entity';
 
-export class UserEntity {
-  id: number;
+export class UserEntity extends BaseEntity {
   email: string;
 
   @Exclude()
@@ -13,10 +13,9 @@ export class UserEntity {
   phone?: number;
   avatar?: string;
   teamId?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
 
   constructor(partial: Partial<UserEntity>) {
+    super(partial);
     Object.assign(this, partial);
   }
 }

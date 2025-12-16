@@ -12,16 +12,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { Routes, Services } from '@/constants/common';
+import { Routes, Services } from '@/common/constants/common';
 import { ApiTags } from '@nestjs/swagger';
 import { EmailLoginDto } from './dtos/email-login.dto';
 import { LoginResponseInterface } from './interfaces/login-response.interface';
-import { TransformResponseInterceptor } from '@/interceptors/transform-response.interceptor';
+import { TransformResponseInterceptor } from '@/common/interceptors/transform-response.interceptor';
 import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { setCookies } from '@/utils/helpers';
+import { setCookies } from '@/common/utils/helpers';
 import { AuthService } from './auth.service';
-import { UserEntity } from '@/users/entities/user.entity';
+import { UserEntity } from '@/modules/users/entities/user.entity';
 
 @ApiTags('Auth')
 @Controller(Routes.AUTH)

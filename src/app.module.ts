@@ -1,18 +1,18 @@
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import appConfig from './configs/app.config';
-import authConfig from './configs/auth.config';
-import databaseConfig from './configs/database.config';
+import appConfig from './common/configs/app.config';
+import authConfig from './common/configs/auth.config';
+import databaseConfig from './common/configs/database.config';
 
 import { ClsModule } from 'nestjs-cls';
 import { randomUUID } from 'crypto';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
-import { AppLogger } from './utils/logger';
+import { AppLogger } from './common/utils/logger';
 import { Request } from 'express';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [

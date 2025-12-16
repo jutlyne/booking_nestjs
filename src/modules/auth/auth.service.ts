@@ -1,14 +1,14 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { EmailLoginDto } from './dtos/email-login.dto';
 import { LoginResponseInterface } from './interfaces/login-response.interface';
-import { Services } from '@/constants/common';
-import { compareHash } from '@/utils/helpers';
+import { Services } from '@/common/constants/common';
+import { compareHash } from '@/common/utils/helpers';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { AllConfigType } from '@/configs/config.interface';
+import { AllConfigType } from '@/common/configs/config.interface';
 import ms from 'ms';
-import { UsersService } from '@/users/users.service';
-import { UserEntity } from '@/users/entities/user.entity';
+import { UsersService } from '@/modules/users/users.service';
+import { UserEntity } from '@/modules/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {

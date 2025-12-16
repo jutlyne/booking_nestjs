@@ -1,4 +1,4 @@
-import { UserEntity } from '@/users/entities/user.entity';
+import { UserEntity } from '@/modules/users/entities/user.entity';
 
 export type LoginResponseInterface = Readonly<{
   token?: string;

@@ -5,10 +5,10 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
-import { AllConfigType } from './configs/config.interface';
-import validationOptions from './utils/validate-option';
-import { AppLogger } from './utils/logger';
-import { Environment } from './configs/app.config';
+import { AllConfigType } from './common/configs/config.interface';
+import validationOptions from './common/utils/validate-option';
+import { AppLogger } from './common/utils/logger';
+import { Environment } from './common/configs/app.config';
 import { useContainer } from 'class-validator';
 
 async function bootstrap() {

@@ -1,4 +1,4 @@
-import { ForbiddenException } from '@/exceptions/forbidden.exception';
+import { ForbiddenException } from '@/common/exceptions/forbidden.exception';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Role } from '@prisma/client';

@@ -9,10 +9,10 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Services } from 'src/constants/common';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@/roles/roles.guard';
-import { Roles } from '@/roles/roles.decorator';
+import { Services } from '@/common/constants/common';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/roles/roles.guard';
+import { Roles } from '@/common/roles/roles.decorator';
 import { Role } from '@prisma/client';
 
 @Controller('users')

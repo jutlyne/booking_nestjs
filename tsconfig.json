@@ -20,7 +20,8 @@
     "esModuleInterop": true,
     "paths": {
 			"@/*": ["src/*"],
-			"@utils/*": ["src/utils/*"],
+			"@common/*": ["src/common/*"],
+			"@utils/*": ["src/common/utils/*"],
 		}
   }
 }

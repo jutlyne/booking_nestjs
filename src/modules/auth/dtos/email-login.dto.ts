@@ -1,8 +1,8 @@
 import { IsNotEmpty, Validate } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsExist } from '@/utils/validators/is-exists.validator';
-import { lowerCaseTransformer } from '@/utils/transformers/lower-case.transformer';
+import { IsExist } from '@/common/utils/validators/is-exists.validator';
+import { lowerCaseTransformer } from '@/common/utils/transformers/lower-case.transformer';
 
 export class EmailLoginDto {
   @ApiProperty({ example: 'user@example.com' })
