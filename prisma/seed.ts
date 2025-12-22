@@ -1,3 +1,4 @@
+import { hashPassword } from '@/common/utils/helpers';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -24,7 +25,7 @@ async function main() {
     create: {
       email: 'admin@example.com',
       fullname: 'Supper Admin',
-      password: 'Matkhau@123',
+      password: await hashPassword('Matkhau@123'),
       phone: 1234567890,
       role: 'admin',
     },

@@ -1,14 +1,14 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { UsersRepository } from './users.repository';
+import { UserRepository } from './user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from '@/common/constants/common';
 import { GetUsersDto } from './dto/get-users.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
-    @Inject(Repository.USERS) private readonly repo: UsersRepository,
+    @Inject(Repository.USERS) private readonly repo: UserRepository,
   ) {}
 
   create(dto: CreateUserDto): Promise<UserEntity> {

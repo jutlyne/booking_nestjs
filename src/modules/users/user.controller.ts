@@ -11,9 +11,9 @@ import {
   ParseIntPipe,
   Req,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Services } from '@/common/constants/common';
+import { Routes, Services } from '@/common/constants/common';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/roles/roles.guard';
 import { Roles } from '@/common/roles/roles.decorator';
@@ -23,10 +23,10 @@ import { ForbiddenException } from '@/common/exceptions/forbidden.exception';
 import { Request } from 'express';
 import { UserEntity } from './entities/user.entity';
 
-@Controller('users')
+@Controller(Routes.USERS)
 @UseGuards(JwtAuthGuard)
-export class UsersController {
-  constructor(@Inject(Services.USERS) private readonly service: UsersService) {}
+export class UserController {
+  constructor(@Inject(Services.USERS) private readonly service: UserService) {}
 
   @Get()
   getUsers(@Query() dto: GetUsersDto) {

@@ -7,13 +7,13 @@ import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from '@/common/configs/config.interface';
 import ms from 'ms';
-import { UsersService } from '@/modules/users/users.service';
+import { UserService } from '@/modules/users/user.service';
 import { UserEntity } from '@/modules/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(Services.USERS) private readonly usersService: UsersService,
+    @Inject(Services.USERS) private readonly usersService: UserService,
     private readonly configService: ConfigService<AllConfigType>,
     private readonly jwtService: JwtService,
   ) {}

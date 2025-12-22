@@ -1,4 +1,4 @@
-import { UsersModule } from './modules/users/users.module';
+import { UserModule } from './modules/users/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -13,6 +13,7 @@ import * as winston from 'winston';
 import { AppLogger } from './common/utils/logger';
 import { Request } from 'express';
 import { AuthModule } from './modules/auth/auth.module';
+import { RoomBookingModule } from './modules/room-bookings/room-booking.module';
 
 @Module({
   imports: [
@@ -50,8 +51,9 @@ import { AuthModule } from './modules/auth/auth.module';
         }),
       ],
     }),
-    UsersModule,
+    UserModule,
     AuthModule,
+    RoomBookingModule,
   ],
   providers: [AppLogger],
 })

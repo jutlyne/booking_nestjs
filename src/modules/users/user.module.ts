@@ -1,21 +1,21 @@
 import { IsNotExist } from '@/common/utils/validators/is-not-exists.validator';
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
-import { UsersRepository } from './users.repository';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
+import { UserRepository } from './user.repository';
 import { PrismaService } from 'src/databases/prisma.service';
 import { Repository, Services } from '@/common/constants/common';
 
 @Module({
-  controllers: [UsersController],
+  controllers: [UserController],
   providers: [
     {
       provide: Repository.USERS,
-      useClass: UsersRepository,
+      useClass: UserRepository,
     },
     {
       provide: Services.USERS,
-      useClass: UsersService,
+      useClass: UserService,
     },
     PrismaService,
     IsNotExist,
@@ -23,8 +23,8 @@ import { Repository, Services } from '@/common/constants/common';
   exports: [
     {
       provide: Services.USERS,
-      useClass: UsersService,
+      useClass: UserService,
     },
   ],
 })
-export class UsersModule {}
+export class UserModule {}
