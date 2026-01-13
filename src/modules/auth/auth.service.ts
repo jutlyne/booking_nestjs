@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { EmailLoginDto } from './dtos/email-login.dto';
 import { LoginResponseInterface } from './interfaces/login-response.interface';
 import { Services } from '@/common/constants/common';
@@ -59,6 +65,39 @@ export class AuthService {
     };
   }
 
+  async refreshTokens(refreshToken: string) {
+    try {
+      const refreshSecret = this.configService.getOrThrow<string>(
+        'auth.refreshSecret',
+        { infer: true },
+      );
+
+      const payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: refreshSecret,
+      });
+
+      const userId = payload.sessionId;
+
+      if (!userId) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+
+      const user = await this.usersService.findById(userId);
+
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      return await this.getTokensData({
+        id: user.id,
+        role: user.role,
+      });
+    } catch (error) {
+      console.log(error);
+
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+  }
   async getProfile(
     id?: number,
   ): Promise<ResponseInterface<UserEntity | object>> {

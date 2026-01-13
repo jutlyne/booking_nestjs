@@ -22,6 +22,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { setCookies } from '@/common/utils/helpers';
 import { AuthService } from './auth.service';
 import { UserEntity } from '@/modules/users/entities/user.entity';
+import { RefreshTokenDto } from './dtos/refresh-token.dto';
 
 @ApiTags('Auth')
 @Controller(Routes.AUTH)
@@ -44,6 +45,26 @@ export class AuthController {
     setCookies(res, 'refreshToken', String(refreshToken), tokenExpires);
 
     return { data: { user } };
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(
+    @Body() body: RefreshTokenDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { token, refreshToken, tokenExpires } =
+      await this.authService.refreshTokens(body.refreshToken);
+
+    setCookies(res, 'token', String(token), tokenExpires);
+    setCookies(res, 'refreshToken', String(refreshToken), tokenExpires);
+
+    return {
+      data: {
+        token,
+        refreshToken,
+      },
+    };
   }
 
   @Get('profile')

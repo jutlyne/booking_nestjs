@@ -22,13 +22,13 @@ export function setCookies(
   value: string,
   maxAge: number = 3600,
 ): void {
-  const cookieOptions = {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  res.cookie(name, value, {
     httpOnly: true,
-    sameSite: 'none' as const,
-    secure: true,
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd,
     maxAge: maxAge * 1000,
     path: '/',
-  };
-
-  res.cookie(name, value, cookieOptions);
+  });
 }
