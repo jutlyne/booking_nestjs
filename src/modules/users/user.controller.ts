@@ -9,50 +9,66 @@ import {
   Query,
   Delete,
   ParseIntPipe,
-  Req,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Routes, Services } from '@/common/constants/common';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@/common/roles/roles.guard';
-import { Roles } from '@/common/roles/roles.decorator';
-import { Role } from '@prisma/client';
 import { GetUsersDto } from './dto/get-users.dto';
-import { ForbiddenException } from '@/common/exceptions/forbidden.exception';
-import { Request } from 'express';
-import { UserEntity } from './entities/user.entity';
+import { Permission } from '@/common/permissions/permission.enum';
+import { Permissions } from '@/common/permissions/permissions.decorator';
+import { RedisPermissionGuard } from '@/common/permissions/redis-role.guard';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserPermissionService } from '@/common/permissions/redis-permissions';
 
 @Controller(Routes.USERS)
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RedisPermissionGuard)
 export class UserController {
-  constructor(@Inject(Services.USERS) private readonly service: UserService) {}
+  constructor(
+    @Inject(Services.USERS) private readonly service: UserService,
+    private readonly userPermissionService: UserPermissionService,
+  ) {}
 
   @Get()
+  @Permissions(Permission.USER_READ)
   getUsers(@Query() dto: GetUsersDto) {
     return this.service.findAll(dto);
   }
 
   @Post()
-  @UseGuards(RolesGuard)
-  @Roles(Role.admin)
+  @Permissions(Permission.USER_CREATE)
   create(@Body() dto: CreateUserDto) {
     return this.service.create(dto);
   }
 
   @Get(':id')
+  @Permissions(Permission.USER_READ)
   findOne(@Param('id') id: string) {
     return this.service.findById(Number(id));
   }
 
-  @Delete(':id')
-  @UseGuards(RolesGuard)
-  @Roles(Role.admin)
-  deleteUser(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
-    if ((req?.user as UserEntity).id === id) {
-      throw new ForbiddenException();
+  @Patch(':id')
+  @Permissions(Permission.USER_UPDATE)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateUserDto,
+  ) {
+    const updatedUser = await this.service.updateUser(id, dto);
+
+    if (dto.role) {
+      await this.userPermissionService.setUserPermissions(id, dto.role);
     }
 
-    return this.service.deleteUser(id);
+    return updatedUser;
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+    const result = await this.service.deleteUser(id);
+
+    await this.userPermissionService.removeUserPermissions(id);
+
+    return result;
   }
 }

@@ -5,6 +5,8 @@ import { UserController } from './user.controller';
 import { UserRepository } from './user.repository';
 import { PrismaService } from 'src/databases/prisma.service';
 import { Repository, Services } from '@/common/constants/common';
+import { RedisService } from '@/common/redis/redis.service';
+import { UserPermissionService } from '@/common/permissions/redis-permissions';
 
 @Module({
   controllers: [UserController],
@@ -18,6 +20,11 @@ import { Repository, Services } from '@/common/constants/common';
       useClass: UserService,
     },
     PrismaService,
+    {
+      provide: Services.REDIS,
+      useClass: RedisService,
+    },
+    UserPermissionService,
     IsNotExist,
   ],
   exports: [

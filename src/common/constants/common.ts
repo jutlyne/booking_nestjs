@@ -9,6 +9,7 @@ export enum Services {
   AUTH = 'AUTH_SERVICE',
   ROOMS = 'ROOMS_SERVICE',
   ROOM_BOOKINGS = 'ROOM_BOOKINGS_SERVICE',
+  REDIS = 'REDIS_SERVICE',
 }
 
 export enum Routes {
@@ -16,4 +17,5 @@ export enum Routes {
   AUTH = 'auth',
   ROOMS = 'rooms',
   ROOM_BOOKINGS = 'room_bookings',
+  REDIS = 'redis',
 }

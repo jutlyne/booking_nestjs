@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from '@/common/constants/common';
 import { GetUsersDto } from './dto/get-users.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,14 @@ export class UserService {
 
   create(dto: CreateUserDto): Promise<UserEntity> {
     return this.repo.create(dto);
+  }
+
+  async updateUser(id: number, dto: UpdateUserDto) {
+    const { email: _email, ...safeDto } = dto;
+
+    await this.findById(id);
+
+    return this.repo.update(id, safeDto);
   }
 
   async findById(id: number): Promise<UserEntity> {
@@ -42,7 +51,7 @@ export class UserService {
     try {
       await this.repo.deleteUser(id);
       return { message: 'User deleted successfully' };
-    } catch (error: any) {
+    } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(`User with id ${id} not found`);
       }

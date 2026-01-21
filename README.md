@@ -102,3 +102,4 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 - Add column npx prisma migrate dev --name add_role_to_user_table
 - Run seed npx prisma db seed
+- Add new enum npx prisma migrate dev --name add_super_admin_role

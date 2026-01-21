@@ -23,6 +23,7 @@ import { setCookies } from '@/common/utils/helpers';
 import { AuthService } from './auth.service';
 import { UserEntity } from '@/modules/users/entities/user.entity';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
+import { UserPermissionService } from '@/common/permissions/redis-permissions';
 
 @ApiTags('Auth')
 @Controller(Routes.AUTH)
@@ -30,6 +31,7 @@ import { RefreshTokenDto } from './dtos/refresh-token.dto';
 export class AuthController {
   constructor(
     @Inject(Services.AUTH) private readonly authService: AuthService,
+    private readonly userPermissionService: UserPermissionService,
   ) {}
 
   @Post('login')
@@ -43,6 +45,8 @@ export class AuthController {
 
     setCookies(res, 'token', String(token), tokenExpires);
     setCookies(res, 'refreshToken', String(refreshToken), tokenExpires);
+
+    await this.userPermissionService.setUserPermissions(user.id, user.role);
 
     return { data: { user } };
   }

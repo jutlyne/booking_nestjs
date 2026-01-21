@@ -14,12 +14,13 @@ import { AppLogger } from './common/utils/logger';
 import { Request } from 'express';
 import { AuthModule } from './modules/auth/auth.module';
 import { RoomBookingModule } from './modules/room-bookings/room-booking.module';
+import redisConfig from './common/configs/redis.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
-      load: [appConfig, authConfig, databaseConfig],
+      load: [appConfig, authConfig, databaseConfig, redisConfig],
       isGlobal: true,
     }),
     ClsModule.forRoot({

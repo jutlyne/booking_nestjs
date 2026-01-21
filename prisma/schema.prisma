@@ -20,6 +20,7 @@ enum Frequency {
 }
 
 enum Role {
+  super_admin
   admin
   user
 }

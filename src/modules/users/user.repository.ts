@@ -4,6 +4,9 @@ import { UserEntity } from './entities/user.entity';
 import { hashPassword } from '@/common/utils/helpers';
 import { PrismaService } from '@/databases/prisma.service';
 import { GetUsersDto } from './dto/get-users.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserRepository {
@@ -18,18 +21,22 @@ export class UserRepository {
       },
     });
 
-    return new UserEntity({
-      id: user.id,
-      email: user.email,
-      password: user.password,
-      role: user.role,
-      fullname: user.fullname ?? undefined,
-      phone: user.phone ?? undefined,
-      avatar: user.avatar ?? undefined,
-      teamId: user.teamId ?? undefined,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+    return new UserEntity(this.toEntity(user));
+  }
+
+  async update(id: number, data: UpdateUserDto): Promise<UserEntity> {
+    const updateData: UpdateUserDto = { ...data };
+
+    if (data.password) {
+      updateData.password = await hashPassword(data.password);
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: updateData,
     });
+
+    return new UserEntity(this.toEntity(user));
   }
 
   async findById(id: number): Promise<UserEntity | null> {
@@ -77,7 +84,7 @@ export class UserRepository {
   async findAll(dto: GetUsersDto) {
     const { teamId, email, name, lastId = 0, limit = 10 } = dto;
 
-    const where: any = {};
+    const where: Prisma.UserWhereInput = {};
     if (teamId) where.teamId = teamId;
     if (email) where.email = { contains: email };
     if (name) where.fullname = { contains: name };
@@ -98,6 +105,21 @@ export class UserRepository {
   async deleteUser(id: number) {
     return this.prisma.user.delete({
       where: { id },
+    });
+  }
+
+  private toEntity(user: User): UserEntity {
+    return new UserEntity({
+      id: user.id,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      fullname: user.fullname ?? undefined,
+      phone: user.phone ?? undefined,
+      avatar: user.avatar ?? undefined,
+      teamId: user.teamId ?? undefined,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
   }
 }

@@ -9,10 +9,13 @@ import { AppLogger } from '@/common/utils/logger';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PrismaService } from '@/databases/prisma.service';
+import { RedisModule } from '@/common/redis/redis.module';
+import { UserPermissionService } from '@/common/permissions/redis-permissions';
 
 @Module({
   imports: [
     UserModule,
+    RedisModule,
     JwtModule.register({
       global: true,
     }),
@@ -24,6 +27,7 @@ import { PrismaService } from '@/databases/prisma.service';
     AppLogger,
     JwtStrategy,
     PrismaService,
+    UserPermissionService,
     {
       provide: Services.AUTH,
       useClass: AuthService,

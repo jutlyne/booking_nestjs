@@ -37,9 +37,15 @@ export interface MailerConfig {
   requireTLS: boolean;
 }
 
+export interface RedisConfig {
+  url: string;
+  token: string;
+}
+
 export interface AllConfigType {
   app: AppConfig;
   database: DatabaseConfig;
   auth: AuthConfig;
   mailer: MailerConfig;
+  redis: RedisConfig;
 }
