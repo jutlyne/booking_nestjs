@@ -11,10 +11,11 @@ export class UserPermissionService {
     @Inject(Services.REDIS) private readonly redisService: RedisService,
   ) {}
 
-  async setUserPermissions(userId: number, role: Role) {
+  async setUserPermissions(userId: number, role: Role, isActive = true) {
     await this.redisService.set(`user:${userId}`, {
       role,
       permissions: ROLE_PERMISSIONS[role] || [],
+      isActive,
     });
   }
 

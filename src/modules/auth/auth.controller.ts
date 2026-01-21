@@ -19,7 +19,7 @@ import { LoginResponseInterface } from './interfaces/login-response.interface';
 import { TransformResponseInterceptor } from '@/common/interceptors/transform-response.interceptor';
 import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { setCookies } from '@/common/utils/helpers';
+import { clearCookie, setCookies } from '@/common/utils/helpers';
 import { AuthService } from './auth.service';
 import { UserEntity } from '@/modules/users/entities/user.entity';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
@@ -71,10 +71,23 @@ export class AuthController {
     };
   }
 
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request, @Res() res: Response) {
+    const userId = (req.user as UserEntity)?.id;
+
+    await this.userPermissionService.removeUserPermissions(userId);
+    clearCookie(res, 'token');
+    clearCookie(res, 'refreshToken');
+
+    return res.status(200).json({ message: 'Logged out successfully' });
+  }
+
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  getProfile(@Req() request: Request) {
-    const userId = (request.user as UserEntity)?.id;
+  getProfile(@Req() req: Request) {
+    const userId = (req.user as UserEntity)?.id;
     return this.authService.getProfile(userId);
   }
 }

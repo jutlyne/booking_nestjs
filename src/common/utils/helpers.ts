@@ -32,3 +32,18 @@ export function setCookies(
     path: '/',
   });
 }
+
+/**
+ * @param res - Express response object
+ * @param name - Cookie name to clear
+ */
+export function clearCookie(res: Response, name: string): void {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  res.clearCookie(name, {
+    httpOnly: true,
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd,
+    path: '/',
+  });
+}
