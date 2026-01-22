@@ -16,5 +16,5 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     Permission.USER_READ,
   ],
 
-  user: [Permission.USER_READ],
+  user: [Permission.USER_READ, Permission.USER_UPDATE],
 };

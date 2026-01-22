@@ -10,7 +10,7 @@ export class UserEntity extends BaseEntity {
 
   role: Role;
   fullname?: string | null;
-  phone?: number | null;
+  phone?: string | null;
   avatar?: string | null;
   teamId?: number | null;
 

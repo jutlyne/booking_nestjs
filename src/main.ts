@@ -11,6 +11,9 @@ import { AppLogger } from './common/utils/logger';
 import { Environment } from './common/configs/app.config';
 import { useContainer } from 'class-validator';
 
+import * as express from 'express';
+import { join } from 'path';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService<AllConfigType>);
@@ -30,6 +33,8 @@ async function bootstrap() {
   });
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  app.use('/uploads', express.static(join(__dirname, '../../', 'uploads')));
 
   const PORT = configService.getOrThrow('app.port', { infer: true });
 

@@ -26,7 +26,7 @@ async function main() {
       email: 'admin@example.com',
       fullname: 'Supper Admin',
       password: await hashPassword('Matkhau@123'),
-      phone: 1234567890,
+      phone: '01234565789',
       role: 'admin',
     },
   });

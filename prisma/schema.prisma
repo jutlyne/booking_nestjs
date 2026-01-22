@@ -32,7 +32,7 @@ model User {
   password            String    @map("password")
   role                Role      @default(user) @map("role")
   fullname            String?   @map("fullname")
-  phone               Int?      @map("phone")
+  phone               String?   @map("phone")
   avatar              String?   @map("avatar")
   teamId              Int?      @map("team_id")
   passwordResetPin    Int?      @map("password_reset_pin")

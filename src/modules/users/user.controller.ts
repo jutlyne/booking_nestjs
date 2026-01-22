@@ -10,6 +10,8 @@ import {
   Delete,
   ParseIntPipe,
   Patch,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,6 +23,9 @@ import { Permissions } from '@/common/permissions/permissions.decorator';
 import { RedisPermissionGuard } from '@/common/permissions/redis-role.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPermissionService } from '@/common/permissions/redis-permissions';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes } from '@nestjs/swagger';
+import { uploadConfig } from '@/common/utils/multer';
 
 @Controller(Routes.USERS)
 @UseGuards(JwtAuthGuard, RedisPermissionGuard)
@@ -38,8 +43,24 @@ export class UserController {
 
   @Post()
   @Permissions(Permission.USER_CREATE)
-  create(@Body() dto: CreateUserDto) {
-    return this.service.create(dto);
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: uploadConfig.storage,
+      fileFilter: uploadConfig.fileFilter,
+      limits: { fileSize: uploadConfig.maxSize },
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  create(
+    @Body() dto: CreateUserDto,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
+    let avatarUrl: string | undefined;
+    if (avatar) {
+      avatarUrl = `/uploads/${avatar.filename}`;
+    }
+
+    return this.service.create({ avatar: avatarUrl, ...dto });
   }
 
   @Get(':id')
