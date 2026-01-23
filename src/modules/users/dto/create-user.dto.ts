@@ -10,19 +10,20 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from '@/common/utils/transformers/lower-case.transformer';
 import { IsNotExist } from '@/common/utils/validators/is-not-exists.validator';
+import { UserErrorCode } from '@/common/errors/error-codes';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'user@example.com' })
   @Transform(lowerCaseTransformer)
-  @IsNotEmpty()
+  @IsNotEmpty({ message: UserErrorCode.EMAIL_ALREADY_EXISTS })
   @Validate(IsNotExist, ['user'], {
-    message: 'emailAlreadyExists',
+    message: UserErrorCode.EMAIL_ALREADY_EXISTS,
   })
-  @IsEmail()
+  @IsEmail({}, { message: UserErrorCode.EMAIL_ALREADY_EXISTS })
   email: string;
 
   @ApiProperty({ example: 'password123', minLength: 6 })
-  @MinLength(6)
+  @MinLength(6, { message: UserErrorCode.PASSWORD_TOO_SHORT })
   password: string;
 
   @ApiPropertyOptional({ example: 'John' })

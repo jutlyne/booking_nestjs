@@ -5,6 +5,7 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from '@/common/constants/common';
 import { GetUsersDto } from './dto/get-users.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserErrorCode } from '@/common/errors/error-codes';
 
 @Injectable()
 export class UserService {
@@ -34,13 +35,13 @@ export class UserService {
 
   async findById(id: number): Promise<UserEntity> {
     const user = await this.repo.findById(id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException(UserErrorCode.USER_NOT_FOUND);
     return user;
   }
 
   async findByEmail(email: string): Promise<UserEntity> {
     const user = await this.repo.findByEmail(email);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException(UserErrorCode.USER_NOT_FOUND);
     return user;
   }
 
@@ -61,7 +62,7 @@ export class UserService {
       return { message: 'User deleted successfully' };
     } catch (error) {
       if (error.code === 'P2025') {
-        throw new NotFoundException(`User with id ${id} not found`);
+        throw new NotFoundException(UserErrorCode.USER_NOT_FOUND);
       }
       throw error;
     }
