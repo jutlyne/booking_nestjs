@@ -17,7 +17,15 @@ export class UserService {
   }
 
   async updateUser(id: number, dto: UpdateUserDto) {
-    const { email: _email, ...safeDto } = dto;
+    const { email: _email, isRemoveAvatar: _isRemoveAvatar, ...safeDto } = dto;
+
+    if (!dto.avatar) {
+      delete safeDto.avatar;
+    }
+
+    if (dto.isRemoveAvatar) {
+      safeDto.avatar = null;
+    }
 
     await this.findById(id);
 

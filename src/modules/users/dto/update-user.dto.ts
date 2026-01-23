@@ -7,4 +7,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @IsEnum(Role)
   role?: Role;
+
+  @IsOptional()
+  @IsEnum({ true: 'true', false: 'false' })
+  isRemoveAvatar?: 'true' | 'false';
 }

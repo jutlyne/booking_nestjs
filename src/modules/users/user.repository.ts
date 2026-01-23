@@ -46,18 +46,7 @@ export class UserRepository {
 
     if (!user) return null;
 
-    return new UserEntity({
-      id: user.id,
-      email: user.email,
-      password: user.password,
-      role: user.role,
-      fullname: user.fullname ?? undefined,
-      phone: user.phone ?? undefined,
-      avatar: user.avatar ?? undefined,
-      teamId: user.teamId ?? undefined,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    });
+    return this.toEntity(user);
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -111,6 +100,7 @@ export class UserRepository {
   private toEntity(user: User): UserEntity {
     return new UserEntity({
       id: user.id,
+      name: user.name ?? undefined,
       email: user.email,
       password: user.password,
       role: user.role,

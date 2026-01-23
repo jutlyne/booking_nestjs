@@ -25,6 +25,11 @@ export class CreateUserDto {
   @MinLength(6)
   password: string;
 
+  @ApiPropertyOptional({ example: 'John' })
+  @IsOptional()
+  @IsString()
+  name?: string;
+
   @ApiPropertyOptional({ example: 'John Doe' })
   @IsOptional()
   @IsString()
@@ -37,5 +42,5 @@ export class CreateUserDto {
   @ApiPropertyOptional({ example: 'avatar.png' })
   @IsOptional()
   @IsString()
-  avatar?: string;
+  avatar?: string | null;
 }

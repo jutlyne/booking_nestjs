@@ -71,11 +71,27 @@ export class UserController {
 
   @Patch(':id')
   @Permissions(Permission.USER_UPDATE)
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: uploadConfig.storage,
+      fileFilter: uploadConfig.fileFilter,
+      limits: { fileSize: uploadConfig.maxSize },
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateUserDto,
+    @UploadedFile() avatar: Express.Multer.File,
   ) {
-    const updatedUser = await this.service.updateUser(id, dto);
+    let avatarUrl: string | undefined;
+    if (avatar) {
+      avatarUrl = `/uploads/${avatar.filename}`;
+    }
+    const updatedUser = await this.service.updateUser(id, {
+      avatar: avatarUrl,
+      ...dto,
+    });
 
     if (dto.role) {
       await this.userPermissionService.setUserPermissions(id, dto.role);
@@ -85,6 +101,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Permissions(Permission.USER_DELETE)
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     const result = await this.service.deleteUser(id);
 
