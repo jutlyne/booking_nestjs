@@ -10,14 +10,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   constructor(private readonly configService: ConfigService<AllConfigType>) {}
 
   onModuleInit() {
-    const url = this.configService.getOrThrow('redis.url', { infer: true });
-    const token = this.configService.getOrThrow('redis.token', { infer: true });
+    // const url = this.configService.getOrThrow('redis.url', { infer: true });
+    // const token = this.configService.getOrThrow('redis.token', { infer: true });
 
-    if (!url || !token) {
-      throw new Error('Redis URL or Token not defined in config!');
-    }
+    // if (!url || !token) {
+    //   throw new Error('Redis URL or Token not defined in config!');
+    // }
 
-    this.redisClient = new Redis({ url, token });
+    this.redisClient = Redis.fromEnv();
   }
 
   onModuleDestroy() {}
